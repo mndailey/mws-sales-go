@@ -2,6 +2,7 @@ package db
 
 import (
 	"errors"
+	"fmt"
 	"log"
 )
 
@@ -14,6 +15,13 @@ type InvRec struct {
 	InReport   bool
 	TotalQty   int
 	InStockQty int
+}
+
+// DumpSkuMap Dumps the SKU Map table
+func (info *Info) DumpSkuMap() {
+	for key, val := range info.SkuMap {
+		fmt.Println(key, "->", val)
+	}
 }
 
 // LoadSkuMap Loads the SKU Map table into memory
@@ -38,11 +46,20 @@ func (info *Info) LoadSkuMap() error {
 		}
 		m[sku] = skuGrp
 	}
-	for key, val := range m {
-		log.Println(key, "->", val)
-	}
 	info.SkuMap = m
 	return nil
+}
+
+// DumpInvMap Dumps the Inv Map table
+func (info *Info) DumpInvMap(filter func(inv *InvRec) string) int {
+	cnt := 0
+	for _, val := range info.InvMap {
+		if str := filter(val); str != "" {
+			fmt.Println(str)
+			cnt++
+		}
+	}
+	return cnt
 }
 
 // LoadInventory loads the inventory file into memory

@@ -1,8 +1,10 @@
 package main
 
 import (
-	"github.com/mndailey/mws-sales-go/db"
+	"fmt"
 	"log"
+
+	"github.com/mndailey/mws-sales-go/db"
 )
 
 func main() {
@@ -14,7 +16,12 @@ func main() {
 		log.Fatal(err)
 	}
 	defer dbi.Close()
-	for sku, invrec := range dbi.InvMap {
-		log.Println(sku, "->", invrec)
-	}
+	cnt := dbi.DumpInvMap(func(inv *db.InvRec) string {
+		if inv.SkuGrp == "" {
+			return fmt.Sprintf("%s -> %s", inv.Sku, inv.SkuGrp)
+		} else {
+			return fmt.Sprintf("%s -> %s", inv.Sku, inv.SkuGrp)
+		}
+	})
+	fmt.Println("Inv: ", cnt)
 }
