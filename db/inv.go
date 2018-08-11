@@ -73,12 +73,3 @@ func (info *Info) LoadInventory() error {
 	info.InvMap = m
 	return nil
 }
-
-/*
-var sku string
-var itemName string
-var totalQty int
-var
-sku, item_name, fba_total_supply_quantity,
-  fba_in_stock_supply_quantity, in_report, like_sku
-*/
