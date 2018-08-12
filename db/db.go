@@ -4,7 +4,7 @@ import (
 	"database/sql"
 
 	/*
-	   mysql driver used to make certina mysql avail to sql.Open
+	   mysql driver used to make certin mysql avail to sql.Open
 	*/
 	_ "github.com/go-sql-driver/mysql"
 )
