@@ -11,9 +11,13 @@ import (
 
 // Info implements a High-level DB instance
 type Info struct {
-	db     *sql.DB
-	SkuMap map[string]string
-	InvMap map[string]*InvRec
+	db               *sql.DB
+	SkuMap           map[string]string
+	InvMap           map[string]*InvRec
+	OrderMap         map[string][]int
+	YearWeekToIdxMap map[int]int // Map YearWeek to an index
+	IdxToYearWeekMap []int       // Map Index to YearWeek
+	NumWeeks         int
 }
 
 // Close closes the db connection

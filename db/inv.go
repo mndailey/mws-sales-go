@@ -15,6 +15,15 @@ type InvRec struct {
 	InReport   bool
 	TotalQty   int
 	InStockQty int
+	FbaEnabled bool
+}
+
+// IsFBAEnabled - returns true if FBAEnabled
+func (inv *InvRec) IsFBAEnabled() bool {
+	if inv != nil {
+		return inv.FbaEnabled
+	}
+	return false
 }
 
 // DumpSkuMap Dumps the SKU Map table
@@ -84,6 +93,7 @@ func (info *Info) LoadInventory() error {
 			&inv.InStockQty, &inv.InReport, &inv.LikeSku); err != nil {
 			return err
 		}
+		inv.FbaEnabled = inv.TotalQty > 0
 		inv.SkuGrp = info.SkuMap[inv.Sku]
 		m[inv.Sku] = inv
 	}
