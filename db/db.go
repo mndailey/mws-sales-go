@@ -14,6 +14,7 @@ type Info struct {
 	db               *sql.DB
 	SkuMap           map[string]string
 	InvMap           map[string]*InvRec
+	FBAMap           map[string]*FBARec
 	OrderMap         map[string][]int
 	YearWeekToIdxMap map[int]int // Map YearWeek to an index
 	IdxToYearWeekMap []int       // Map Index to YearWeek
@@ -40,5 +41,21 @@ func Instance() (*Info, error) {
 	info := &Info{
 		db: db,
 	}
+
+	if err := info.LoadSkuMap(); err != nil {
+		defer db.Close()
+		return nil, err
+	}
+
+	if err := info.LoadInventory(); err != nil {
+		defer db.Close()
+		return nil, err
+	}
+
+	if err := info.LoadOrderTable(); err != nil {
+		defer db.Close()
+		return nil, err
+	}
+
 	return info, nil
 }

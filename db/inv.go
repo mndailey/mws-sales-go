@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"fmt"
 	"log"
 )
@@ -26,17 +25,10 @@ func (inv *InvRec) IsFBAEnabled() bool {
 	return false
 }
 
-// DumpSkuMap Dumps the SKU Map table
-func (info *Info) DumpSkuMap() {
-	for key, val := range info.SkuMap {
-		fmt.Println(key, "->", val)
-	}
-}
-
 // LoadSkuMap Loads the SKU Map table into memory
 func (info *Info) LoadSkuMap() error {
 	if info == nil {
-		return errors.New("info cannot be nil in LoadSkuMap")
+		return fmt.Errorf("info cannot be nil in LoadSkuMap")
 	}
 	rows, err := info.db.Query("SELECT sku, sku_grp FROM sku_map_tbl")
 	if err != nil {
@@ -59,22 +51,10 @@ func (info *Info) LoadSkuMap() error {
 	return nil
 }
 
-// DumpInvMap Dumps the Inv Map table
-func (info *Info) DumpInvMap(filter func(inv *InvRec) string) int {
-	cnt := 0
-	for _, val := range info.InvMap {
-		if str := filter(val); str != "" {
-			fmt.Println(str)
-			cnt++
-		}
-	}
-	return cnt
-}
-
 // LoadInventory loads the inventory file into memory
 func (info *Info) LoadInventory() error {
 	if info == nil {
-		return errors.New("info cannot be nil in LoadSkuMap")
+		return fmt.Errorf("info cannot be nil in LoadSkuMap")
 	}
 	info.LoadSkuMap()
 	rows, err := info.db.Query(`SELECT sku, item_name, fba_total_supply_quantity,
@@ -99,4 +79,35 @@ func (info *Info) LoadInventory() error {
 	}
 	info.InvMap = m
 	return nil
+}
+
+// DumpSkuMap Dumps the SKU Map table
+func (info *Info) DumpSkuMap() {
+	for key, val := range info.SkuMap {
+		fmt.Println(key, "->", val)
+	}
+}
+
+
+// DumpInvMap Dumps the Inv Map table
+func (info *Info) DumpInvMapFilter(filter func(inv *InvRec) string) int {
+	cnt := 0
+	for _, val := range info.InvMap {
+		if str := filter(val); str != "" {
+			fmt.Println(str)
+			cnt++
+		}
+	}
+	return cnt
+}
+
+// DumpInvMap Dumps the Inv Map table
+func (info *Info) DumpInvMap() {
+	cnt := info.DumpInvMapFilter(func(inv *InvRec) string {
+		if inv.TotalQty > 0 {
+			return fmt.Sprintf("SKU: %s, GRP: %s, Tot: %d, Stock: %d", inv.Sku, inv.SkuGrp, inv.TotalQty, inv.InStockQty)
+		}
+		return ""
+	})
+	fmt.Println("Inv: ", cnt)
 }

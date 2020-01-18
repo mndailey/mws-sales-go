@@ -81,8 +81,8 @@ func (info *Info) LoadOrderTable() error {
 	return nil
 }
 
-// DumpOrderMap Dumps the Order Map table
-func (info *Info) DumpOrderMap(filter func(sku string, idx, yearweek, qty int) string) int {
+// DumpOrderMapFilter Dumps the Order Map table with filter
+func (info *Info) DumpOrderMapFilter(filter func(sku string, idx, yearweek, qty int) string) int {
 	cnt := 0
 	for sku, m := range info.OrderMap {
 		for idx, qty := range m {
@@ -93,4 +93,15 @@ func (info *Info) DumpOrderMap(filter func(sku string, idx, yearweek, qty int) s
 		}
 	}
 	return cnt
+}
+
+// DumpOrderMapFilter Dumps the Order Map table with filter
+func (info *Info) DumpOrderMap() {
+	cnt := info.DumpOrderMapFilter(func(sku string, idx, yearweek, qty int) string {
+		if qty > 0 {
+			return fmt.Sprintf("SKU: %s, Idx: %d, YearWeek: %d, Qty: %d", sku, idx, yearweek, qty)
+		}
+		return ""
+	})
+	fmt.Println("Ord: ", cnt)
 }
