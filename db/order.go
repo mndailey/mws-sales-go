@@ -95,7 +95,7 @@ func (info *Info) DumpOrderMapFilter(filter func(sku string, idx, yearweek, qty 
 	return cnt
 }
 
-// DumpOrderMapFilter Dumps the Order Map table with filter
+// DumpOrderMap Dumps the Order Map table with filter
 func (info *Info) DumpOrderMap() {
 	cnt := info.DumpOrderMapFilter(func(sku string, idx, yearweek, qty int) string {
 		if qty > 0 {

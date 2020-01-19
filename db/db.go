@@ -32,7 +32,7 @@ func (info *Info) Close() {
 // Instance returns an instance of the db
 func Instance() (*Info, error) {
 	// Create the database handle, confirm driver is present
-	db, _ := sql.Open("mysql", "mystic-sa:acres4@tcp(192.168.0.3)/ey_order_process")
+	db, _ := sql.Open("mysql", "acres4admin:acres4@tcp(localhost)/ey_order_process")
 	if err := db.Ping(); err != nil {
 		defer db.Close()
 		return nil, err
@@ -53,6 +53,11 @@ func Instance() (*Info, error) {
 	}
 
 	if err := info.LoadOrderTable(); err != nil {
+		defer db.Close()
+		return nil, err
+	}
+
+	if err := info.LoadFBASHipments(); err != nil {
 		defer db.Close()
 		return nil, err
 	}

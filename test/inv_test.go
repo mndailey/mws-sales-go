@@ -13,9 +13,10 @@ func TestInv(t *testing.T) {
 		t.Errorf("Error opening db %v.", err)
 	} else {
 		defer dbi.Close()
-		dbi.DumpSkuMap()
-		dbi.DumpInvMap()
-		dbi.DumpOrderMap()
+		//dbi.DumpSkuMap()
+		//dbi.DumpInvMap()
+		//dbi.DumpOrderMap()
+		dbi.DumpFBAMap()
 	}
 
 }
